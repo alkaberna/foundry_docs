@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foundry по-русски</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+  <nav id="navbar">
+    <header>JS Documentation</header>
+    <ul>
+      <li><a class="nav-link" href="#foundry-introduction">Введение в Foundry</a></li>
+      <li>
+        <a class="nav-link" href="#foundry-review">Обзор Foundry</a>
+      </li>
+      <li>
+        <a class="nav-link" href="#JavaScript_and_Java">JavaScript and Java</a>
+      </li>
+      <li><a class="nav-link" href="#Hello_world">Hello world</a></li>
+      <li><a class="nav-link" href="#Variables">Variables</a></li>
+      <li>
+        <a class="nav-link" href="#Declaring_variables">Declaring variables</a>
+      </li>
+      <li><a class="nav-link" href="#Variable_scope">Variable scope</a></li>
+      <li>
+        <a class="nav-link" href="#Global_variables">Global variables</a>
+      </li>
+      <li><a class="nav-link" href="#Constants">Constants</a></li>
+      <li><a class="nav-link" href="#Data_types">Data types</a></li>
+      <li>
+        <a class="nav-link" href="#if...else_statement">if...else statement</a>
+      </li>
+      <li><a class="nav-link" href="#while_statement">while statement</a></li>
+      <li>
+        <a class="nav-link" href="#Function_declarations">Function declarations</a>
+      </li>
+      <li><a class="nav-link" href="#Reference">Reference</a></li>
+    </ul>
+  </nav>
+  <main id="main-doc">
+    <section class="main-section" id="foundry-introduction">
+      <article>
+        <header>Введение в Foundry</header>
+        <p>
+          Foundry — это фреймворк Solidity для сборки, тестирования, фаззинга, отладки и развертывания смарт-контрактов
+          на Solidity. Преимущество Foundry заключается в том, что он рассматривает Solidity как полноценный инструмент,
+          используя его исключительно для разработки и тестирования. Если вы не очень хорошо знакомы с JavaScript,
+          Foundry
+          — отличный выбор. Он обеспечивает очень высокую скорость сборки и тестирования.
+        </p>
+        <p>
+          Foundry обладает мощными функциями тестирования. Управление состоянием блокчейна с помощью чит-кодов позволяет
+          удобно моделировать различные сценарии. Кроме того, поддерживается фаззинг-тестирование на основе свойств.
+        </p>
+        <p>
+          Foundry написан на языке Rust и включает в себя ряд инструментов для взаимодействия с сетью Ethereum, включая:
+        </p>
+        <p>
+        <ul>
+          <li>Forge: для тестирования контрактов;</li>
+          <li>Cast: для удобного взаимодействия с контрактами, отправки транзакций и запроса данных в цепочке;</li>
+          <li>Anvil: для моделирования приватного узла;</li>
+          <li>Chisel: для быстрого, эффективного и интерактивного написания и тестирования контрактов в командной
+            строке.
+          </li>
+        </ul>
+        </p>
+        <p>
+          В следующих главах мы рассмотрим каждый из этих инструментов по отдельности.
+        </p>
+      </article>
+    </section>
+    <section class="main-section" id="installation">
+      <article>
+        <header>Установка Foundry</header>
+        <p>
+          Foundryup — это установщик инструментария Foundry. Мы используем его для установки Foundry. Сначала выполните
+          следующую команду в терминале:
+        </p>
+        <code>curl -L https://foundry.paradigm.xyz | bash</code>
+        <p>
+          Это загрузит Foundryup. Следуйте инструкциям, чтобы настроить переменные среды, или откройте новое окно, а
+          затем установите Foundry, выполнив команду:
+        </p>
+        <code>foundryup</code>
+        <p>
+          После установки инструменты Forge, Cast, Anvil и Chisel будут установлены автоматически. Вы можете проверить
+          успешность установки, выполнив следующую команду:
+        </p>
+        <code>forge --version</code>
+        <p>
+          Будет отображен номер версии Forge, подтверждающий, был ли Forge успешно установлен в вашей системе.
+        </p>
+        <p>
+          Если вы используете Windows, вам необходимо установить и использовать Git BASH или WSL в качестве командного
+          терминала, поскольку Foundryup в настоящее время не поддерживает PowerShell или Cmd.
+        </p>
+      </article>
+    </section>
+    <section class="main-section" id="install-vscode">
+      <article>
+        <header>Установка VSCode</header>
+        <p>
+          Для последующей разработки контрактов, компиляции, тестирования и других операций рекомендуется использовать
+          VSCode в качестве IDE. Вы можете скачать и установить VSCode для вашей операционной системы здесь, а также
+          установить плагин Solidity.
+        </p>
+      </article>
+    </section>
+
+    <section class="main-section" id="foundry-review">
+      <article>
+        <header>Обзор Foundry</header>
+        <h2>forge init: инициализация проекта</h2>
+        <p>В этом разделе мы продолжим изучать инструмент командной строки Forge и использовать его для создания,
+          компиляции и тестирования проектов контрактов. Сначала используйте следующую команду для создания
+          демонстрационного проекта hello_foundry:</p>
+        <code>> forge init hello_foundry
+Installing forge-std in /Users/user/vsc_workspace/hello_foundry/lib/forge-std (url:
+Some("https://github.com/foundry-rs/forge-std"), tag: None)
+    Installed forge-std v1.8.1
+    Initialized forge project
+        </code>
+        <p>Команда init создает каталог проекта и устанавливает библиотеку forge-std. Созданная структура проекта
+          Foundry выглядит следующим образом:</p>
+        <code>> tree -L 2
+.
+├── README.md
+├── foundry.toml
+├── lib
+│   └── forge-std
+├── script
+│   └── Counter.s.sol
+├── src
+│   └── Counter.sol
+└── test
+    └── Counter.t.sol
+
+6 directories, 5 files
+        </code>
+        <ul>
+          <li>src: Каталог смарт-контрактов;</li>
+          <li>script: файлы скрипта развертывания;</li>
+          <li>lib: Каталог библиотеки зависимостей;</li>
+          <li>test: Каталог тестовых случаев смарт-контрактов;</li>
+          <li>foundry.toml: Конфигурационный файл для указания сетевых URL-адресов и параметров компиляции.</li>
+        </ul>
+        <p>Мы открываем этот проект с помощью VSCode.</p>
+        <p>Counter.sol — это простой контракт счётчика. Он имеет переменную состояния типа uint256, которую он
+          присваивает и увеличивает с помощью функций setNumber и increment.</p>
+        <h2>Компиляция и тестирование контракта</h2>
+        <p>Вы можете скомпилировать контракт с помощью команды forge build. Если в файле foundry.toml не указана версия
+          компилятора Solc, по умолчанию будет использована последняя версия. Скомпилированные файлы (ABI контракта,
+          байт-код) будут помещены в папку out.</p>
+        <code>> forge build
+[⠢] Compiling...
+[⠒] Installing Solc version 0.8.25
+[⠒] Successfully installed Solc 0.8.25
+[⠑] Compiling 27 files with 0.8.25
+[⠘] Solc 0.8.25 finished in 1.02s
+Compiler run successful!
+        </code>
+        <p>Вы можете выполнить тестовые случаи контракта с помощью команды forge test.</p>
+        <code>> forge test
+[⠒] Compiling...
+[⠃] Installing Solc version 0.8.25
+[⠰] Successfully installed Solc 0.8.25
+No files changed, compilation skipped
+
+Ran 2 tests for test/Counter.t.sol:CounterTest
+[PASS] testFuzz_SetNumber(uint256) (runs: 256, μ: 30688, ~: 31310)
+[PASS] test_Increment() (gas: 31325)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 20.09ms (15.70ms CPU time)
+
+Ran 1 test suite in 115.23ms (20.09ms CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)
+        </code>
+        <h2>forge test: Тестирование</h2>
+        <p>Использовать Foundry для написания тестов очень удобно. Команда forge test выполнит все тестовые случаи из
+          тестового пакета и выведет результаты тестов Forge (пройдено или нет), причины ошибок и время выполнения.</p>
+        <p>Вот некоторые соглашения, касающиеся тестирования:</p>
+        <ul>
+          <li>Тестовые случаи находятся в тестовом пакете и обычно заканчиваются на **.t.sol;</li>
+          <li>Имена методов тестирования начинаются с test_, за которыми следует правило именования в стиле camelCase;
+          </li>
+          <li>Тесты пишутся путем наследования контракта Test.sol из стандартной библиотеки forge-std.</li>
+        </ul>
+        <h3>Тестирование контрактов</h3>
+        <p>Ниже представлен тестовый файл test/Counter.t.sol, использующий контракт Test.sol из стандартной библиотеки.
+          Функция setUp используется для инициализации перед тестированием: создания новых контрактов и присвоения
+          начальных значений переменным состояния. Функции test_xxx автоматически вызываются Forge для тестирования.
+          Функция assertEq используется для проверки того, что изменённые переменные состояния равны ожидаемым
+          значениям. Кроме того, существует функция assertNotEq, которая проверяет, что два числа не равны.</p>
+        <pre><code>// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.13;
+
+import {Test, console} from "forge-std/Test.sol";
+import {Counter} from "../src/Counter.sol";
+
+contract CounterTest is Test {
+    Counter public counter;
+
+    function setUp() public {
+        counter = new Counter();
+        counter.setNumber(0);
+    }
+
+    function test_Increment() public {
+        counter.increment();
+        assertEq(counter.number(), 1);
+    }
+
+    function testFuzz_SetNumber(uint256 x) public {
+        counter.setNumber(x);
+        assertEq(counter.number(), x);
+    }
+}
+        </code></pre>
+        <h3>Выполнение тестов</h3>
+        <p>Тестовые случаи можно выполнить тремя способами:</p>
+        <ul>
+          <li>Команда forge test запустит все тестовые случаи из тестового пакета. После выполнения в командной строке
+            будут выведены результаты теста Forge (пройдено или нет), причины ошибок и время выполнения.</li>
+          <li>Используя команду forge test --match-path test/Counter.t.sol, мы указываем путь к файлу с помощью
+            -match-path для запуска тестов;</li>
+          <li>Используя команду forge test --match-contract CounterTest --match-test test_Increment, мы указываем имя
+            тестового контракта с помощью --match-contract, а --match-test указывает тестовый метод, который необходимо
+            вызвать.</li>
+        </ul>
+        <p>Примечание: после --match-path следует имя файла, а после --match-contract — имя контракта. Поэтому при
+          указании параметров внимательно следите за корректностью условий сопоставления.</p>
+        <h3>Проверка непрохождения：testFail_xxx</h3>
+        <p>В предыдущем разделе мы проверили успешность тестов с помощью функции test_Increment и макроса assertEq.
+          Аналогичным
+          образом мы можем проверить непрохождение тестов, то есть запуск операции возврата. Если операция возврата
+          запущена,
+          тест, как и ожидалось, проваливается, а если нет, то проваливается сам тест.</p>
+        <p>Вы можете использовать testFail_xxx для проверки того, запущена ли операция отката.</p>
+        <pre><code>pragma solidity 0.8.10;
+
+import "forge-std/Test.sol";
+
+contract ContractBTest is Test {
+    uint256 testNumber;
+
+    function setUp() public {
+        testNumber = 42;
+    }
+
+    function testFail_Subtract43() public {
+        testNumber -= 43;
+    }
+}
+        </code></pre>
+        <p>После выполнения функции testFail_Subtract43 значение testNumber становится отрицательным. Однако uint256 —
+          беззнаковый тип, то есть не может принимать отрицательные значения. Следовательно, эта функция завершится
+          ошибкой. Используя синтаксис testFail_xxx, мы можем получить ожидаемый результат ошибки, как показано ниже:
+        </p>
+        <code><pre>> forge test --match-path test/CounterB.t.sol
+
+Compiler run successful!
+
+Ran 1 test for test/CounterB.t.sol:ContractBTest
+[PASS] testFail_Subtract43() (gas: 2396)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 5.28ms (424.88µs CPU time)
+
+Ran 1 test suite in 173.19ms (5.28ms CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)
+        </pre></code>
+        <p>PASS в результате означает, что тест пройден, и показывает количество израсходованного газа, что означает,
+          что функция не сработала, как и ожидалось. Помимо использования testFail_xxx, мы также можем добиться той же
+          функциональности, комбинируя её с чит-кодами, как показано ниже.</p>
+        <h3>Проверка непрохождения：чит-коды</h3>
+        <p>Чит-коды позволяют нам моделировать различные сценарии и модели поведения, включая изменение состояний
+          контрактов, моделирование различных транзакций, корректировку времени и номеров блоков и т. д. Здесь мы
+          используем их для моделирования ситуации возврата с целью проверки ненормальной обработки логики контракта.
+        </p>
+        <code><pre>function test_CannotSubtract43() public {
+    vm.expectRevert(stdError.arithmeticError);
+    testNumber -= 43;
+}
+        </pre></code>
+        <p>С помощью vm.expectRevert(stdError.arithmeticError) мы ожидаем возврата. Это означает, что мы ожидаем, что
+          эта операция вычитания вызовет возврат из-за арифметической ошибки. Если тест выполняет операцию вычитания, но
+          не запускает возврат, тест считается проваленным; в противном случае он пройден. Результат его выполнения
+          следующий:</p>
+        <pre><code>> forge test --match-path test/CounterB.t.sol
+Compiler run successful!
+
+Ran 2 tests for test/CounterB.t.sol:ContractBTest
+[PASS] testFail_Subtract43() (gas: 2396)
+[PASS] test_CannotSubtract43() (gas: 5754)
+
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 5.01ms (831.63µs CPU time)
+
+Ran 1 test suite in 165.94ms (5.01ms CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)
+        </code></pre>
+        <p>Примечание: Тестовые функции должны быть видимы извне или публично. Функции, объявленные как внутренние или
+          приватные, не будут обрабатываться Forge, даже если их префикс — test.</p>
+      </article>
+      <h3>Журналирование (логгирование) информации</h3>
+      <p>Мы также можем вывести результаты значений в тестовых случаях, используя console2.sol (который включает патч
+        для console.sol, позволяющий Forge декодировать консольные вызовы для трассировки). Мы можем изменить функцию
+        test_CannotSubtract43, включив console2.log, как показано ниже:</p>
+      <code><pre>function test_CannotSubtract43() public {
+    vm.expectRevert(stdError.arithmeticError);
+    console2.log("currentNumber = %d", testNumber);
+    testNumber -= 43;
+}
+      </pre></code>
+      <p>По умолчанию forge test отображает только сводку пройденных и проваленных тестов. Вы можете использовать флаг
+        -vv для увеличения уровня ведения журнала, например, отображая «currentNumber» в разделе «Logs».</p>
+      <code><pre>> forge test --match-path test/CounterB.t.sol -vv
+Compiler run successful!
+
+Ran 2 tests for test/CounterB.t.sol:ContractBTest
+[PASS] testFail_Subtract43() (gas: 2402)
+[PASS] test_CannotSubtract43() (gas: 9053)
+Logs:
+currentNumber= 42
+
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 5.70ms (1.30ms CPU time)
+
+Ran 1 test suite in 170.65ms (5.70ms CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)
+      </pre></code>
+      <p>Forge предлагает 5 уровней тестирования, которые можно задать с помощью -v. Среди них forge test эквивалентен
+        forge test -v, который выводит данные о потреблении газа в тестовом методе и суммирует результаты тестирования.
+      <ul>
+        <li>Level2(vv): Выводит подробную информацию, такую ​​как журналы, утверждения, ожидаемые результаты и причины
+          ошибок;</li>
+        <li>Level3(vvv): Выводит трассировки стека для неудачных тестов;</li>
+        <li>Level4(vvvv): Помимо трассировок стека для неудачных результатов, выводит все трассировки стека для всех
+          тестов;</li>
+        <li>Level5(vvvvv): Всегда отображает трассировки стека и трассировки настройки. Также отображает создание
+          объектов и подробный анализ каждого шага.
+      </ul>
+      </p>
+      <h2>forge create: Развертывание и проверка контрактов</h2>
+    </section>
+
+  </main>
+</body>
+
+</html>
