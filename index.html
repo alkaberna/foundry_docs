@@ -10,38 +10,34 @@
 
 <body>
   <nav id="navbar">
-    <header>JS Documentation</header>
+    <header>Документация Forge</header>
     <ul>
-      <li><a class="nav-link" href="#foundry-introduction">Введение в Foundry</a></li>
       <li>
-        <a class="nav-link" href="#foundry-review">Обзор Foundry</a>
+        <a class="nav-link" href="#introduction">Введение в Foundry</a>
       </li>
       <li>
-        <a class="nav-link" href="#JavaScript_and_Java">JavaScript and Java</a>
+        <a class="nav-link" href="#installation">Установка Foundry</a>
       </li>
-      <li><a class="nav-link" href="#Hello_world">Hello world</a></li>
-      <li><a class="nav-link" href="#Variables">Variables</a></li>
       <li>
-        <a class="nav-link" href="#Declaring_variables">Declaring variables</a>
+        <a class="nav-link" href="#forge-init">forge init: инициализация проекта</a>
       </li>
-      <li><a class="nav-link" href="#Variable_scope">Variable scope</a></li>
       <li>
-        <a class="nav-link" href="#Global_variables">Global variables</a>
+        <a class="nav-link" href="#forge-test">forge test: тестирование</a>
       </li>
-      <li><a class="nav-link" href="#Constants">Constants</a></li>
-      <li><a class="nav-link" href="#Data_types">Data types</a></li>
       <li>
-        <a class="nav-link" href="#if...else_statement">if...else statement</a>
+        <a class="nav-link" href="#forge-create">forge create: развертывание и проверка контрактов</a>
       </li>
-      <li><a class="nav-link" href="#while_statement">while statement</a></li>
       <li>
-        <a class="nav-link" href="#Function_declarations">Function declarations</a>
+        <a class="nav-link" href="#forge-verify-contract">forge verify-contract: проверка развернутого контракта</a>
       </li>
-      <li><a class="nav-link" href="#Reference">Reference</a></li>
+      <li>
+        <a class="nav-link" href="#forge-script">forge script: развертывание и проверка с помощью скриптов</a>
+      </li>
+
     </ul>
   </nav>
   <main id="main-doc">
-    <section class="main-section" id="foundry-introduction">
+    <section class="main-section" id="introduction">
       <article>
         <header>Введение в Foundry</header>
         <p>
@@ -98,11 +94,7 @@
           Если вы используете Windows, вам необходимо установить и использовать Git BASH или WSL в качестве командного
           терминала, поскольку Foundryup в настоящее время не поддерживает PowerShell или Cmd.
         </p>
-      </article>
-    </section>
-    <section class="main-section" id="install-vscode">
-      <article>
-        <header>Установка VSCode</header>
+        <h2>Установка VSCode</h2>
         <p>
           Для последующей разработки контрактов, компиляции, тестирования и других операций рекомендуется использовать
           VSCode в качестве IDE. Вы можете скачать и установить VSCode для вашей операционной системы здесь, а также
@@ -110,23 +102,20 @@
         </p>
       </article>
     </section>
-
-    <section class="main-section" id="foundry-review">
+    <section class="main-section" id="forge-init">
       <article>
-        <header>Обзор Foundry</header>
-        <h2>forge init: инициализация проекта</h2>
+        <header>forge init: инициализация проекта</header>
         <p>В этом разделе мы продолжим изучать инструмент командной строки Forge и использовать его для создания,
           компиляции и тестирования проектов контрактов. Сначала используйте следующую команду для создания
           демонстрационного проекта hello_foundry:</p>
-        <code>> forge init hello_foundry
+        <code><pre>> forge init hello_foundry
 Installing forge-std in /Users/user/vsc_workspace/hello_foundry/lib/forge-std (url:
 Some("https://github.com/foundry-rs/forge-std"), tag: None)
     Installed forge-std v1.8.1
-    Initialized forge project
-        </code>
+    Initialized forge project</pre></code>
         <p>Команда init создает каталог проекта и устанавливает библиотеку forge-std. Созданная структура проекта
           Foundry выглядит следующим образом:</p>
-        <code>> tree -L 2
+        <code><pre>> tree -L 2
 .
 ├── README.md
 ├── foundry.toml
@@ -139,8 +128,7 @@ Some("https://github.com/foundry-rs/forge-std"), tag: None)
 └── test
     └── Counter.t.sol
 
-6 directories, 5 files
-        </code>
+6 directories, 5 files</pre></code>
         <ul>
           <li>src: Каталог смарт-контрактов;</li>
           <li>script: файлы скрипта развертывания;</li>
@@ -155,16 +143,15 @@ Some("https://github.com/foundry-rs/forge-std"), tag: None)
         <p>Вы можете скомпилировать контракт с помощью команды forge build. Если в файле foundry.toml не указана версия
           компилятора Solc, по умолчанию будет использована последняя версия. Скомпилированные файлы (ABI контракта,
           байт-код) будут помещены в папку out.</p>
-        <code>> forge build
+        <code><pre>> forge build
 [⠢] Compiling...
 [⠒] Installing Solc version 0.8.25
 [⠒] Successfully installed Solc 0.8.25
 [⠑] Compiling 27 files with 0.8.25
 [⠘] Solc 0.8.25 finished in 1.02s
-Compiler run successful!
-        </code>
+Compiler run successful!</pre></code>
         <p>Вы можете выполнить тестовые случаи контракта с помощью команды forge test.</p>
-        <code>> forge test
+        <code><pre>> forge test
 [⠒] Compiling...
 [⠃] Installing Solc version 0.8.25
 [⠰] Successfully installed Solc 0.8.25
@@ -175,25 +162,33 @@ Ran 2 tests for test/Counter.t.sol:CounterTest
 [PASS] test_Increment() (gas: 31325)
 Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 20.09ms (15.70ms CPU time)
 
-Ran 1 test suite in 115.23ms (20.09ms CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)
-        </code>
-        <h2>forge test: Тестирование</h2>
+Ran 1 test suite in 115.23ms (20.09ms CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)</pre></code>
+      </article>
+    </section>
+    <section class="main-section" id="forge-test">
+      <article>
+        <header>forge test: тестирование</header>
         <p>Использовать Foundry для написания тестов очень удобно. Команда forge test выполнит все тестовые случаи из
           тестового пакета и выведет результаты тестов Forge (пройдено или нет), причины ошибок и время выполнения.</p>
         <p>Вот некоторые соглашения, касающиеся тестирования:</p>
         <ul>
-          <li>Тестовые случаи находятся в тестовом пакете и обычно заканчиваются на **.t.sol;</li>
-          <li>Имена методов тестирования начинаются с test_, за которыми следует правило именования в стиле camelCase;
+          <li>
+            Тестовые случаи находятся в тестовом пакете и обычно заканчиваются на **.t.sol;
           </li>
-          <li>Тесты пишутся путем наследования контракта Test.sol из стандартной библиотеки forge-std.</li>
+          <li>
+            Имена методов тестирования начинаются с test_, за которыми следует правило именования в стиле camelCase;
+          </li>
+          <li>
+            Тесты пишутся путем наследования контракта Test.sol из стандартной библиотеки forge-std.
+          </li>
         </ul>
-        <h3>Тестирование контрактов</h3>
+        <h2>Тестирование контрактов</h2>
         <p>Ниже представлен тестовый файл test/Counter.t.sol, использующий контракт Test.sol из стандартной библиотеки.
           Функция setUp используется для инициализации перед тестированием: создания новых контрактов и присвоения
           начальных значений переменным состояния. Функции test_xxx автоматически вызываются Forge для тестирования.
           Функция assertEq используется для проверки того, что изменённые переменные состояния равны ожидаемым
           значениям. Кроме того, существует функция assertNotEq, которая проверяет, что два числа не равны.</p>
-        <pre><code>// SPDX-License-Identifier: UNLICENSED
+        <code><pre>// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
 import {Test, console} from "forge-std/Test.sol";
@@ -216,9 +211,8 @@ contract CounterTest is Test {
         counter.setNumber(x);
         assertEq(counter.number(), x);
     }
-}
-        </code></pre>
-        <h3>Выполнение тестов</h3>
+}</pre></code>
+        <h2>Выполнение тестов</h2>
         <p>Тестовые случаи можно выполнить тремя способами:</p>
         <ul>
           <li>Команда forge test запустит все тестовые случаи из тестового пакета. После выполнения в командной строке
@@ -231,14 +225,12 @@ contract CounterTest is Test {
         </ul>
         <p>Примечание: после --match-path следует имя файла, а после --match-contract — имя контракта. Поэтому при
           указании параметров внимательно следите за корректностью условий сопоставления.</p>
-        <h3>Проверка непрохождения：testFail_xxx</h3>
+        <h2>Проверка непрохождения：testFail_xxx</h2>
         <p>В предыдущем разделе мы проверили успешность тестов с помощью функции test_Increment и макроса assertEq.
-          Аналогичным
-          образом мы можем проверить непрохождение тестов, то есть запуск операции возврата. Если операция возврата
-          запущена,
-          тест, как и ожидалось, проваливается, а если нет, то проваливается сам тест.</p>
+          Аналогичным образом мы можем проверить непрохождение тестов, то есть запуск операции возврата. Если операция
+          возврата запущена, тест, как и ожидалось, проваливается, а если нет, то проваливается сам тест.</p>
         <p>Вы можете использовать testFail_xxx для проверки того, запущена ли операция отката.</p>
-        <pre><code>pragma solidity 0.8.10;
+        <code><pre>pragma solidity 0.8.10;
 
 import "forge-std/Test.sol";
 
@@ -252,8 +244,7 @@ contract ContractBTest is Test {
     function testFail_Subtract43() public {
         testNumber -= 43;
     }
-}
-        </code></pre>
+}</pre></code>
         <p>После выполнения функции testFail_Subtract43 значение testNumber становится отрицательным. Однако uint256 —
           беззнаковый тип, то есть не может принимать отрицательные значения. Следовательно, эта функция завершится
           ошибкой. Используя синтаксис testFail_xxx, мы можем получить ожидаемый результат ошибки, как показано ниже:
@@ -266,12 +257,11 @@ Ran 1 test for test/CounterB.t.sol:ContractBTest
 [PASS] testFail_Subtract43() (gas: 2396)
 Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 5.28ms (424.88µs CPU time)
 
-Ran 1 test suite in 173.19ms (5.28ms CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)
-        </pre></code>
+Ran 1 test suite in 173.19ms (5.28ms CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)</pre></code>
         <p>PASS в результате означает, что тест пройден, и показывает количество израсходованного газа, что означает,
           что функция не сработала, как и ожидалось. Помимо использования testFail_xxx, мы также можем добиться той же
           функциональности, комбинируя её с чит-кодами, как показано ниже.</p>
-        <h3>Проверка непрохождения：чит-коды</h3>
+        <h2>Проверка непрохождения：чит-коды</h2>
         <p>Чит-коды позволяют нам моделировать различные сценарии и модели поведения, включая изменение состояний
           контрактов, моделирование различных транзакций, корректировку времени и номеров блоков и т. д. Здесь мы
           используем их для моделирования ситуации возврата с целью проверки ненормальной обработки логики контракта.
@@ -279,13 +269,12 @@ Ran 1 test suite in 173.19ms (5.28ms CPU time): 1 tests passed, 0 failed, 0 skip
         <code><pre>function test_CannotSubtract43() public {
     vm.expectRevert(stdError.arithmeticError);
     testNumber -= 43;
-}
-        </pre></code>
+}</pre></code>
         <p>С помощью vm.expectRevert(stdError.arithmeticError) мы ожидаем возврата. Это означает, что мы ожидаем, что
           эта операция вычитания вызовет возврат из-за арифметической ошибки. Если тест выполняет операцию вычитания, но
           не запускает возврат, тест считается проваленным; в противном случае он пройден. Результат его выполнения
           следующий:</p>
-        <pre><code>> forge test --match-path test/CounterB.t.sol
+        <code><pre>> forge test --match-path test/CounterB.t.sol
 Compiler run successful!
 
 Ran 2 tests for test/CounterB.t.sol:ContractBTest
@@ -294,24 +283,21 @@ Ran 2 tests for test/CounterB.t.sol:ContractBTest
 
 Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 5.01ms (831.63µs CPU time)
 
-Ran 1 test suite in 165.94ms (5.01ms CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)
-        </code></pre>
+Ran 1 test suite in 165.94ms (5.01ms CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)</pre></code>
         <p>Примечание: Тестовые функции должны быть видимы извне или публично. Функции, объявленные как внутренние или
           приватные, не будут обрабатываться Forge, даже если их префикс — test.</p>
-      </article>
-      <h3>Журналирование (логгирование) информации</h3>
-      <p>Мы также можем вывести результаты значений в тестовых случаях, используя console2.sol (который включает патч
-        для console.sol, позволяющий Forge декодировать консольные вызовы для трассировки). Мы можем изменить функцию
-        test_CannotSubtract43, включив console2.log, как показано ниже:</p>
-      <code><pre>function test_CannotSubtract43() public {
+        <h2>Журналирование информации</h2>
+        <p>Мы также можем вывести результаты значений в тестовых случаях, используя console2.sol (который включает патч
+          для console.sol, позволяющий Forge декодировать консольные вызовы для трассировки). Мы можем изменить функцию
+          test_CannotSubtract43, включив console2.log, как показано ниже:</p>
+        <code><pre>function test_CannotSubtract43() public {
     vm.expectRevert(stdError.arithmeticError);
     console2.log("currentNumber = %d", testNumber);
     testNumber -= 43;
-}
-      </pre></code>
-      <p>По умолчанию forge test отображает только сводку пройденных и проваленных тестов. Вы можете использовать флаг
-        -vv для увеличения уровня ведения журнала, например, отображая «currentNumber» в разделе «Logs».</p>
-      <code><pre>> forge test --match-path test/CounterB.t.sol -vv
+}</pre></code>
+        <p>По умолчанию forge test отображает только сводку пройденных и проваленных тестов. Вы можете использовать флаг
+          -vv для увеличения уровня ведения журнала, например, отображая «currentNumber» в разделе «Logs».</p>
+        <code><pre>> forge test --match-path test/CounterB.t.sol -vv
 Compiler run successful!
 
 Ran 2 tests for test/CounterB.t.sol:ContractBTest
@@ -322,23 +308,176 @@ currentNumber= 42
 
 Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 5.70ms (1.30ms CPU time)
 
-Ran 1 test suite in 170.65ms (5.70ms CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)
-      </pre></code>
-      <p>Forge предлагает 5 уровней тестирования, которые можно задать с помощью -v. Среди них forge test эквивалентен
-        forge test -v, который выводит данные о потреблении газа в тестовом методе и суммирует результаты тестирования.
-      <ul>
-        <li>Level2(vv): Выводит подробную информацию, такую ​​как журналы, утверждения, ожидаемые результаты и причины
-          ошибок;</li>
-        <li>Level3(vvv): Выводит трассировки стека для неудачных тестов;</li>
-        <li>Level4(vvvv): Помимо трассировок стека для неудачных результатов, выводит все трассировки стека для всех
-          тестов;</li>
-        <li>Level5(vvvvv): Всегда отображает трассировки стека и трассировки настройки. Также отображает создание
-          объектов и подробный анализ каждого шага.
-      </ul>
-      </p>
-      <h2>forge create: Развертывание и проверка контрактов</h2>
+Ran 1 test suite in 170.65ms (5.70ms CPU time): 2 tests passed, 0 failed, 0 skipped (2 total tests)</pre></code>
+        <p>Forge предлагает 5 уровней тестирования, которые можно задать с помощью -v. Среди них forge test эквивалентен
+          forge test -v, который выводит данные о потреблении газа в тестовом методе и суммирует результаты
+          тестирования.
+        </p>
+        <ul>
+          <li>Level2(vv): Выводит подробную информацию, такую ​​как журналы, утверждения, ожидаемые результаты и причины
+            ошибок;</li>
+          <li>Level3(vvv): Выводит трассировки стека для неудачных тестов;</li>
+          <li>Level4(vvvv): Помимо трассировок стека для неудачных результатов, выводит все трассировки стека для всех
+            тестов;</li>
+          <li>Level5(vvvvv): Всегда отображает трассировки стека и трассировки настройки. Также отображает создание
+            объектов и подробный анализ каждого шага.
+        </ul>
+      </article>
     </section>
+    <section class="main-section" id="forge-create">
+      <article>
+        <header>forge create: развертывание и проверка контрактов</header>
+        <p>Команда forge create в Forge позволяет развёртывать и проверять контракты в заданной сети. Развёртывание
+          можно выполнить полностью с помощью командной строки или с помощью скриптов Solidity. В этом разделе мы
+          сначала рассмотрим первый вариант.</p>
+        <h2>Подготовка</h2>
+        <p>Для развертывания контракта в блокчейне нам понадобится учётная запись с тестовыми монетами и RPC-адрес узла
+          блокчейна. Кроме того, для верификации контракта нам понадобится ключ ETHERSCAN_API_KEY обозревателя
+          блокчейна. В качестве примера мы используем тестовую сеть Sepolia:</p>
+        <p>Кран тестовой монеты: https://www.alchemy.com/faucets/ethereum-sepolia позволяет вам получать 0,5 тестовых
+          монет Sepolia ETH в день, используя ваш адрес.</p>
+        <p>RPC-адрес: Мы можем использовать RPC узлов, предоставленный Alchemy. После регистрации и создания приложения
+          для указанной сети RPC будет автоматически выделен.</p>
+        <p>ETHERSCAN_API_KEY: Создайте приложение в обозревателе блокчейна Ethereum, чтобы получить соответствующий
+          API-ключ.</p>
+        <img src="/images/c6456d84-7551-40ef-a7cb-c157ae852fa9.webp" />
+        <h2>Коды контрактов</h2>
+        <p>В качестве примера мы развернем контракт ERC20. Этот контракт содержит только один конструктор для указания
+          имени токена, идентификатора, точности и информации о первоначальной эмиссии.</p>
+        <code><pre>// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.0;
 
+import {ERC20} from "solmate/tokens/ERC20.sol";
+
+contract MyToken is ERC20 {
+    constructor(
+        string memory name,
+        string memory symbol,
+        uint8 decimals,
+        uint256 initialSupply
+    ) ERC20(name, symbol, decimals) {
+        _mint(msg.sender, initialSupply);
+    }
+}</pre></code>
+        <p>Контракт MyToken наследует пакет solmate от контракта ERC20, поэтому нам необходимо установить зависимости
+          solmate:</p>
+        <code>forge install transmissions11/solmate</code>
+        <h2>Развертывание и проверка</h2>
+        <code>forge create --rpc-url &lt;your_rpc_url&gt; --private-key &lt;your_private_key&gt; --verify src/MyContract.sol:MyContract  --constructor-args &lt;constructor_args&gt;</code>
+        <ul>
+          <li>
+            rpc-url: RPC-адрес узла блокчейна, например, https://eth-sepolia.g.alchemy.com/v2/xxxxxxxxx
+          </li>
+          <li>
+            private-key: закрытый ключ кошелька. Рекомендуется создать кошелёк специально для разработки и тестирования.
+          </li>
+          <li>
+            etherscan-api-key: API KEY TOKEN Blockchain Explorer для проверки контракта.
+          </li>
+          <li>
+            verify: проверка контракта, т.е. открытие исходного кода контракта.
+          </li>
+          <li>
+            :MyContract: фактически развёрнутый контракт. Поскольку в одном файле Solidity разрешено несколько
+            контрактов, необходимо указать контракт, предназначенный для развёртывания.
+          </li>
+          <li>
+            constructor-args: параметры конструктора контракта. Если параметры конструктора отсутствуют, этот атрибут
+            можно опустить.
+          </li>
+        </ul>
+        <p>После выполнения будет предоставлен хэш транзакции, развернутый контрактный адрес и статус проверки.</p>
+        <code><pre>> forge create --rpc-url https://eth-sepolia.g.alchemy.com/v2/xxxxxx \
+  --constructor-args "MyToken" "MT" 18 1000000000000000000000 \
+  --private-key 0xxxxxxx \
+  --etherscan-api-key xxxx \
+  --verify
+  src/MyToken.sol:MyToken
+    
+[⠊] Compiling...
+No files changed, compilation skipped
+Deployer: 0x5CB8896Db7Bf13DE6A6EA362866288e577e4F6C5
+Deployed to: 0x9C7DcF024b94d14FFaA04262139f92F3AA837919
+Transaction hash: 0x18ac7e8824b1fe19ab79977ec7672f8e8324f621fef01a7c8d971fca152748b8
+Starting contract verification...
+Waiting for etherscan to detect contract deployment...
+Start verifying contract `0x9C7DcF024b94d14FFaA04262139f92F3AA837919` deployed on sepolia
+
+Contract [src/MyToken.sol:MyToken] "0x9C7DcF024b94d14FFaA04262139f92F3AA837919" is already verified. Skipping
+verification.</pre></code>
+      </article>
+    </section>
+    <section class="main-section" id="forge-verify-contract">
+      <article>
+        <header>forge verify-contract: проверка развернутого контракта</header>
+        <p>Проверка развёрнутых контрактов более сложная. Для неё требуется ряд данных о развёрнутом контракте:</p>
+        <code><pre>forge verify-contract \
+  --chain-id 11155111 \
+  --num-of-optimizations 1000000 \
+  --watch \
+  --constructor-args $(cast abi-encode "constructor(string,string,uint256,uint256)" "ForgeUSD" "FUSD" 18 1000000000000000000000) \
+  --etherscan-api-key &lt;your_etherscan_api_key&gt; \
+  --compiler-version v0.8.10+commit.fc410830 \
+  &lt;the_contract_address&gt; \
+  src/MyToken.sol:MyToken</pre></code>
+        <p>Во-первых, нам нужна основная информация о развёрнутом контракте:</p>
+        <ul>
+          <li>the_contract_address: адрес развёрнутого контракта;</li>
+          <li>&lt;path&gt;:&lt;contractname&gt;: путь к исходному коду контракта и имя контракта. Если файл контракта
+            содержит несколько контрактов, необходимо указать конкретный контракт с помощью MyContract;</li>
+          <li>your_etherscan_api_key: ключ API браузера блокчейна для проверки контракта.</li>
+        </ul>
+        <p>Во-вторых, нам нужна информация об окружении при развёртывании контракта:</p>
+        <ul>
+          <li>constructor-args: параметры конструктора контракта, представленные в формате ABI. Если параметры
+            конструктора отсутствуют, этот атрибут можно опустить.</li>
+          <li>compiler-version: версия компилятора Solidity, используемая для контракта. Если не указана, она будет
+            определена автоматически.</li>
+          <li>num-of-optimizations: количество итераций, выполняемых компилятором Solidity во время оптимизации.
+            Обратите внимание, что если количество оптимизаций не задано во время проверки, оно по умолчанию равно 0;
+            Если же значение не задано при развертывании, по умолчанию используется значение 200. Поэтому для
+            обеспечения успешной проверки с настройками компиляции по умолчанию используйте -num-of-optimizations 200.
+          </li>
+          <li>chain-id: идентификатор тестовой сети; для тестовой сети Sepolia это 11155111.</li>
+          <li>watch: используется для запроса результатов проверки.</li>
+        </ul>
+        <h2>Процесс проверки</h2>
+        <p>Выполняем эту команду в каталоге проекта. Адрес развёртывания контракта —
+          0x18A5A03d871BFb182e29b5951cf708397E48dB1C. Важно отметить, что код контракта должен быть точно таким же,
+          как и при развёртывании. Любое расхождение в скомпилированном байт-коде приведёт к ошибке проверки. Кроме
+          того, параметры конструктора также должны оставаться неизменными.</p>
+        <code><pre>forge verify-contract \
+  --chain-id 11155111 \
+  --num-of-optimizations 200 \
+  --watch \
+  --constructor-args $(cast abi-encode "constructor(string,string,uint256,uint256)" "MyToken" "MT" 18 1000000000000000000000) \
+  --etherscan-api-key xxxxxx \
+  0x18A5A03d871BFb182e29b5951cf708397E48dB1C \
+  src/MyToken.sol:MyToken
+Start verifying contract `0x18A5A03d871BFb182e29b5951cf708397E48dB1C` deployed on sepolia
+
+Submitting verification for [src/MyToken.sol:MyToken] 0x18A5A03d871BFb182e29b5951cf708397E48dB1C.
+Submitted contract for verification:
+Response: `OK`
+GUID: `a5gxzjgmwt7cdqwjgr5fzwvq6rvqn7mkxlkbywk9rahyd7gvxe`
+URL: https://sepolia.etherscan.io/address/0x18a5a03d871bfb182e29b5951cf708397e48db1c
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified</pre></code>
+        <p>Примечание: При проверке вы можете столкнуться с ошибкой подключения к Etherscan, о чём свидетельствует
+          сообщение об ошибке: «Ошибка при попытке подключения: Сброс соединения удалённым узлом (ошибка ОС 54)». Обычно
+          это вызвано проблемами сети, а не ошибкой команды.</p>
+      </article>
+    </section>
+    <section class="main-section" id="forge-script">
+      <article>
+        <header>forge script: развертывание и проверка с помощью скриптов</header>
+        <p>Развёртывание и проверка контрактов с помощью команды forge create требует ввода множества параметров. Более
+          рекомендуемый подход — использовать Solidity Scripting. Это метод декларативного развёртывания контрактов с
+          использованием Solidity вместо JavaScript.</p>
+      </article>
+    </section>
   </main>
 </body>
 
