@@ -476,6 +476,137 @@ Contract successfully verified</pre></code>
         <p>Развёртывание и проверка контрактов с помощью команды forge create требует ввода множества параметров. Более
           рекомендуемый подход — использовать Solidity Scripting. Это метод декларативного развёртывания контрактов с
           использованием Solidity вместо JavaScript.</p>
+        <h2>Конфигурации проекта</h2>
+        <p>Чтобы развернуть контракт MyToken из предыдущего раздела в тестовой сети Sepolia, необходимо выполнить
+          некоторые настройки в проекте Froundry:</p>
+        <ol>
+          <li>
+            Создайте файл .env для хранения конфиденциальной информации, такой как RPC узла и закрытые ключи, в
+            следующем формате:
+            <code><pre>// Blockchain RPC node address
+SEPOLIA_RPC_URL=xxxx
+// Private key
+PRIVATE_KEY=xxxx
+// Blockchain explorer API KEY TOKEN
+ETHERSCAN_API_KEY=xxxx</pre></code>
+          </li>
+          <li>
+            Добавьте следующие строки в конец файла foundry.toml, чтобы указать переменные, настроенные в файле .env:
+            <code><pre>[rpc_endpoints]
+sepolia = "${SEPOLIA_RPC_URL}"
+
+[etherscan]
+sepolia = { key = "${ETHERSCAN_API_KEY}" }</pre></code>
+          </li>
+          <li>
+            Создайте тестовый скрипт. Создайте папку с именем script в корневом каталоге проекта, а в ней — файл
+            MyToken.s.sol для скрипта развёртывания:
+            <code><pre>// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.25;
+
+import {Script} from "forge-std/Script.sol";
+import "../src/MyToken.sol";
+
+contract MyTokenScript is Script {
+
+    function run() external {
+        uint256 deployer = vm.envUint("PRIVATE_KEY");
+
+        vm.startBroadcast(deployer);
+
+        MyToken myToken = new MyToken("MyToken", "MT", 18, 1000000000000000000);
+        vm.stopBroadcast();
+    }
+}</pre></code>
+          </li>
+        </ol>
+        <p>Этот скрипт развёртывания сам по себе является смарт-контрактом. Как и любой другой смарт-контракт,
+          написанный на Solidity, он должен указывать версию прагмы. Он также наследует контракт Script из стандартной
+          библиотеки Forge:</p>
+        <code>contract MyTokenScript is Script</code>
+        <p>По умолчанию скрипты выполняются путём вызова функции run, которая служит точкой входа.</p>
+        <code>uint256 deployer = vm.envUint("PRIVATE_KEY");</code>
+        <p>Извлекаем закрытый ключ из .env.</p>
+        <code>vm.startBroadcast(deployer);</code>
+        <p>Выше представлен специальный чит-код для записи вызовов и создания контрактов, выполняемых основным
+          контрактом скрипта. Мы передаём развёртыватель (с назначенным ему закрытым ключом) для подписания транзакций.
+          Затем мы транслируем эти транзакции для развёртывания нашего контракта MyToken.</p>
+        <code>MyToken myToken = new MyToken("MyToken", "MT", 18, 1000000000000000000);</code>
+        <p>
+          Приведенная выше строка кода создает контракт MyToken и записывается Forge, как указано в
+          vm.startBroadcast(), и готова к трансляции в сеть.
+        </p>
+        <h2>Выполнение развертывания и проверки</h2>
+        <p>
+          Добавьте ранее упомянутые переменные в файл .env и выполните следующую команду в корневом каталоге проекта:
+        </p>
+        <code><pre># Load the variables fr the .env file
+source .env
+
+# Deploy and verify contract
+forge script script/MyToken.s.sol:MyTokenScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv</pre></code>
+        <p>Forge запустит скрипт и транслирует транзакцию. Это может занять некоторое время, так как необходимо
+          дождаться подтверждения транзакции. Примерно через минуту вы увидите информацию, похожую на представленную
+          ниже, включая адрес развёртывания контракта, расход газа, хэш транзакции, результат проверки и т. д.</p>
+        <code><pre>> forge script script/MyToken.s.sol:MyTokenScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
+
+// ...
+
+== Logs ==
+MyToken deployed on 0xA4d3C606ad7731e5Aa0CE6D79060E7A74D7DAba0
+
+
+==========================
+
+Chain 11155111
+
+Estimated gas price: 3.000231466 gwei
+
+Estimated total gas used for script: 968059
+
+Estimated amount required: 0.002904401072744494 ETH
+
+==========================
+##
+Sending transactions [0 - 0].
+⠁ [00:00:00]
+[########################################################################################################################]
+1/1 txes (0.0s)##
+Waiting for receipts.
+⠉ [00:00:13]
+[####################################################################################################################]
+1/1 receipts (0.0s)
+##### sepolia
+✅ [Success]Hash: 0x3d6150e746d44665ceb845a530222c215c6cdab5ff728c352bd9d3845d73feb0
+Contract Address: 0xA4d3C606ad7731e5Aa0CE6D79060E7A74D7DAba0
+Block: 5525173
+Paid: 0.00223486014132905 ETH (744923 gas * 3.00012235 gwei)
+
+
+
+==========================
+
+ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+Total Paid: 0.00223486014132905 ETH (744923 gas * avg 3.00012235 gwei)
+##
+Start verification for (1) contracts
+Start verifying contract `0xA4d3C606ad7731e5Aa0CE6D79060E7A74D7DAba0` deployed on sepolia
+
+Submitting verification for [src/MyToken.sol:MyToken] 0xA4d3C606ad7731e5Aa0CE6D79060E7A74D7DAba0.
+Submitted contract for verification:
+Response: `OK`
+GUID: `br211fmqfsf5fn7u5c1qj3pbjvsvh6i84zkhr7nru8s39kyuif`
+URL: https://sepolia.etherscan.io/address/0xa4d3c606ad7731e5aa0ce6d79060e7a74d7daba0
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+All (1) contracts were verified!</pre></code>
+        <p>Это подтверждает успешное развертывание контракта MyToken в тестовой сети Sepolia, которое было проверено на
+          Etherscan. Все было выполнено с помощью одной команды!</p>
       </article>
     </section>
   </main>
