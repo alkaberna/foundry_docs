@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Начало работы с Ethers.js</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+  <nav id="navbar">
+    <header>Начало работы с Ethers.js</header>
+    <ul>
+      <li>
+        <a class="nav-link" href="#introduction">Введение в ethers.js</a>
+      </li>
+      <li>
+        <a class="nav-link" href="#setup">Настройка среды разработки</a>
+      </li>
+      <li>
+        <a class="nav-link" href="#connect-provider">Подключение к провайдеру</a>
+      </li>
+      <li>
+        <a class="nav-link" href="#contract-info">Получение информации о контракте</a>
+      </li>
+      <li>
+        <a class="nav-link" href="#connect-wallet">Подключение к кошельку</a>
+      </li>
+      <li>
+        <a class="nav-link" href="#interactions">Взаимодействия с контрактом</a>
+      </li>
+      <li>
+        <a class="nav-link" href="#utilities">Утилиты</a>
+      </li>
+      <li>
+        <a class="nav-link" href="#transactions">Транзакции</a>
+      </li>
+    </ul>
+  </nav>
+  <main id="main-doc">
+    <section class="main-section" id="introduction">
+      <article>
+        <header>Введение в ethers.js</header>
+        <h2>Что такое ethers.js?</h2>
+        <p>Ethers.js — это библиотека, написанная на TypeScript и полезная для разработки интерфейса децентрализованных
+          приложений (DApps) или взаимодействия с сетью Ethereum. Она абстрагируется от многих сложностей, делая процесс
+          создания DApp простым и интуитивно понятным для разработчиков. В основе этого трека будет лежать ethers.js v6.
+        </p>
+        <h2>Преимущества использования ethers.js</h2>
+        <ol>
+          <li>Она легкая. Версия 6.12.0 весит всего 394,8 КБ (в минифицированном виде).</li>
+          <li>Написана на Typescript, она обеспечивает безопасную типизацию и помогает выявлять проблемы во время
+            компиляции, а не во время выполнения.</li>
+          <li>Сетевое подключение и закрытые ключи управляются классами Provider и Wallet соответственно, что делает их
+            более безопасными .</li>
+          <li>Cовместима с Node.js и современными веб-браузерами, что позволяет разработчикам использовать её в
+            различных средах.</li>
+          <li>Её API прост и удобен в использовании.</li>
+          <li>Встроена поддержка Ethereum Name Service (ENS).</li>
+          <li>Она активно поддерживается и обновляется.</li>
+        </ol>
+        <h2>Основные классы</h2>
+        <ol>
+          <li>Contract: ethers.js предоставляет утилиты для взаимодействия со смарт-контрактами, включая классы для
+            развертывания контрактов, создания экземпляров контрактов, вызова методов контрактов и прослушивания событий
+            контрактов.</li>
+          <li>Signer: Обрабатывает закрытые ключи, подписывает сообщения и транзакции, отправляет подписанные транзакции
+            и изменяет состояние блока в процессе.
+          </li>
+          <li>Wallet: ethers.js предоставляет функции для безопасного управления учётными записями и закрытыми ключами.
+            Она включает классы для генерации кошельков на основе мнемонических фраз, импорта кошельков на основе
+            закрытых ключей, взаимодействия с аппаратными кошельками и подписи транзакций. Wallet является подклассом
+            Signer.
+          </li>
+          <li>Provider: ethers.js предоставляет функции для подключения к сети Ethereum и извлечения данных из
+            блокчейна, включая поставщиков для HTTP, WebSockets и т.д.</li>
+          <li>Utilities: ethers.js предоставляет функции для преобразования единиц токенов из удобного для восприятия
+            человеком формата в формат, совместимый с блокчейном, например, из ETH в Wei и наоборот. Он также выполняет
+            кодирование и декодирование различных типов данных и некоторые криптографические операции.</li>
+        </ol>
+        <p>ethers.js — это инструмент, помогающий разработчикам создавать децентрализованные приложения (DApp). Он всё
+          ещё обновляется и развивается, предоставляя простые в использовании SDK. Вы можете присоединиться к сообществу
+          разработчиков <a href="https://discord.com/invite/qYtSscGYYc" target="_blank">здесь</a>.</p>
+      </article>
+    </section>
+    <section class="main-section" id="setup">
+      <article>
+        <header>Настройка среды разработки</header>
+        <h2>Создание проекта</h2>
+        <p>Создадим простой проект, используя npm и ethers.js для взаимодействия с Ethereum. Вот шаги по настройке
+          среды разработки:</p>
+        <h3>Шаг 1: Создайте проект npm</h3>
+        <p>Перед настройкой проекта убедитесь, что на вашем компьютере установлены Node.js и npm. Node.js — это среда
+          выполнения, позволяющая запускать JavaScript на стороне сервера, а npm — менеджер пакетов, упрощающий
+          установку и управление библиотеками. Вы можете скачать и установить Node.js и npm с официального сайта
+          Node.js.</p>
+        <p>Сначала нам нужно инициализировать новый проект npm. Откройте терминал и выполните следующую команду в
+          каталоге вашего проекта:</p>
+        <code>npm init</code>
+        <p>Эта команда создает файл package.json в вашем каталоге, который будет управлять всеми зависимостями вашего
+          проекта.</p>
+        <img src="images/19198dcf-63c6-4d57-b28f-c2c55c8eb9c6.webp" />
+        <h3>Шаг 2: Установка ethers.js</h3>
+        <p>Естественно, чтобы использовать ethers.js, нам нужно установить библиотеку.</p>
+        <code>npm install ethers</code>
+        <p>Это добавит ethers.js к зависимостям вашего проекта и позволит вам использовать его функциональные
+          возможности в ваших скриптах.</p>
+        <img src="images/9ffb9845-59ba-4c06-951b-372f327cc5a4.webp" />
+        <h3>Шаг 3: Настройте тип модулей</h3>
+        <p>Чтобы использовать современные модули JavaScript ES с ethers.js, необходимо указать тип модуля в файле
+          package.json. Это позволит использовать операторы импорта для включения ethers.js в ваш проект. Добавьте в
+          package.json следующую строку:</p>
+        <code>"type": "module"</code>
+        <h3>Шаг 4: Настройте среду разработки</h3>
+        <p>Для редактирования и написания смарт-контрактов и скриптов вы можете использовать любой редактор кода. Visual
+          Studio Code (VS Code) настоятельно рекомендуется благодаря отличной поддержке JavaScript и Solidity
+          посредством расширений. Вы можете скачать VS Code с официального сайта Visual Studio Code. Выполнив эти шаги,
+          вы настроили базовую среду разработки с использованием ethers.js для взаимодействия с Ethereum. На следующем
+          уроке мы начнём писать скрипты для запросов и транзакций в блокчейне.</p>
+        <h3>Шаг 5: Начните свой проект</h3>
+        <p>После настройки среды и установки ethers.js вы можете начать писать JavaScript-код, взаимодействующий с
+          Ethereum. Для запуска скриптов можно использовать:</p>
+        <code>node [имя вашего скрипта]</code>
+      </article>
+    </section>
+    <section class="main-section" id="connect-provider">
+      <article>
+        <header>Подключение к провайдеру</header>
+        <p>В этом курсе по ethers.js мы рассмотрим контракт SimpleCryptoKitties из проекта <a href=""
+            target="_blank">CryptoKitty курса на HackQuest</a>. Вы можете пройти этот курс, чтобы лучше разобраться в
+          NFT-контрактах. Если не хотите, не волнуйтесь, мы обсудим это по ходу курса. В настоящее время мы развернули
+          этот контракт в тестовой сети Sepolia, и адрес контракта следующий:</p>
+        <code>0x983236bE64Ef0f4F6440Fa6146c715CC721045fA</code>
+        <p>ABI выглядит следующим образом:</p>
+        <code><pre>[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "approved",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Approval",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "approved",
+        "type": "bool"
+      }
+    ],
+    "name": "ApprovalForAll",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Transfer",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "_tokenIdCounter",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "approve",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "balanceOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "momId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "dadId",
+        "type": "uint256"
+      }
+    ],
+    "name": "breed",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "createKittyGen0",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getApproved",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      }
+    ],
+    "name": "isApprovedForAll",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "kitties",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "genes",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "birthTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "momId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "dadId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "generation",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "ownerOf",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "approved",
+        "type": "bool"
+      }
+    ],
+    "name": "setApprovalForAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
+      }
+    ],
+    "name": "supportsInterface",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]</pre></code>
+        <h3>Код</h3>
+        <code><pre>//SPDX-License-Identifier: UNLICENSED
+pragma solidity 0.8.17;
+
+import "@openzeppelin/contracts@4.9.3/token/ERC721/ERC721.sol";
+
+contract SimpleCryptoKitties is ERC721 {
+    uint256 public _tokenIdCounter = 1;
+
+    struct Kitty {
+        uint256 genes;
+        uint256 birthTime;
+        uint256 momId;
+        uint256 dadId;
+        uint256 generation;
+    }
+
+    mapping(uint256 => Kitty) public kitties;
+
+    constructor() ERC721("SimpleCryptoKitties", "SCK") {
+        createKittyGen0();
+        createKittyGen0();
+    }
+
+    function createKittyGen0() public returns (uint256) {
+        uint256 genes = uint256(keccak256(abi.encodePacked(block.timestamp, _tokenIdCounter)));
+        return _createKitty(0, 0, 0, genes, msg.sender);
+    }
+
+    function _createKitty(
+        uint256 momId,
+        uint256 dadId,
+        uint256 generation,
+        uint256 genes,
+        address owner
+    ) private returns (uint256) {
+        kitties[_tokenIdCounter] = Kitty(genes, block.timestamp, momId, dadId, generation);
+        _mint(owner, _tokenIdCounter);
+        return _tokenIdCounter++;
+    }
+
+    function breed(uint256 momId, uint256 dadId) public returns (uint256) {
+        Kitty memory mom = kitties[momId];
+        Kitty memory dad = kitties[dadId];
+
+        require(ownerOf(momId) == msg.sender, "Not the owner of the mom kitty");
+        require(ownerOf(dadId) == msg.sender, "Not the owner of the dad kitty");
+        uint256 newGeneration = (mom.generation > dad.generation? mom.generation : dad.generation) + 1;
+        uint256 newGenes = (mom.genes + dad.genes) / 2;
+        return _createKitty(momId, dadId, newGeneration, newGenes, msg.sender);
+    }
+}</pre></code>
+        <h2>Класс Providers</h2>
+        <p>Класс Providers из ethers.js предоставляет абстракцию для подключения к сети Ethereum. Он может только
+          считывать информацию из блокчейна и не обрабатывает закрытый ключ пользователя, что делает его использование
+          более безопасным.</p>
+        <p>Существует несколько поставщиков ethers.js, вот два наиболее распространенных:</p>
+        <h3>ethers.getDefaultProvider()</h3>
+        <p>Он извлекает экземпляр поставщика по умолчанию без явного указания URL-адреса узла.</p>
+        <code>const provider = ethers.getDefaultProvider("network");</code>
+        <ul>
+          <li>поддерживаемые сети：goerli kovan sepolia classicKotti optimism-goerli arbitrum-goerli matic-mumbai bnbt
+          </li>
+          <li>поддерживаемые сервисы: alchemy ankr cloudflare chainstack etherscan infura publicPolygon quicknode</li>
+        </ul>
+        <h3>ethers.JsonRpcProvider</h3>
+        <p>Позволяет подключаться к узлу Ethereum по протоколу JSON-RPC (удалённый вызов процедур). Он разработан в
+          первую очередь для использования по протоколу HTTP.</p>
+        <code>const provider = new ethers.JsonRpcProvider('YOUR PROVIDER ADDRESS');</code>
+        <h3>Получение URL-адреса</h3>
+        <p>Есть несколько способов получить URL-адрес узла:</p>
+        <ol>
+          <li>Infura — популярный провайдер узлов Ethereum, предлагающий бесплатные и платные тарифы. Вы можете
+            зарегистрировать учётную запись на Infura и получить URL-адрес сети Ethereum, к которой хотите подключиться.
+            Обычно URL-адрес выглядит так: https://mainnet.infura.io/v3/YOUR_PROJECT_ID</li>
+          <li>Alchemy — вы также можете получить URL-адрес узла, к которому хотите подключиться. Обычно URL-адрес
+            выглядит так: https://eth-mainnet.alchemyapi.io/v2/YOUR_API_KEY</li>
+          <li>Локальный узел (Ganache, Geth и т.д.) — вы также можете запустить свой локальный узел с помощью таких
+            инструментов, как Ganache или Geth. URL-адрес по умолчанию выглядит так: http://localhost:8545</li>
+          <li>Публичные сети Ethereum — для публичных сетей Ethereum, таких как Mainnet, Ropsten, Rinkeby и т.д., вы
+            можете найти публичных поставщиков узлов, которые предлагают бесплатный доступ, или подписаться на платные
+            услуги.</li>
+        </ol>
+        <h3>Код</h3>
+        <code><pre>import { ethers } from "ethers";
+
+const { getDefaultProvider, JsonRpcProvider } = ethers;
+
+async function main() {
+    try {
+        // DefaultProvider
+        const providerMainnet = ethers.getDefaultProvider("mainnet");
+        const providerSepolia = ethers.getDefaultProvider("sepolia");
+        const providerMatic = ethers.getDefaultProvider("matic", {
+            exclusive: ["etherscan", "infura"]
+        });
+
+        const blockNumberMainnet = await providerMainnet.getBlockNumber();
+        const blockNumberSepolia = await providerSepolia.getBlockNumber();
+        const blockNumberMatic = await providerMatic.getBlockNumber();
+
+        console.log("provider Mainet:", blockNumberMainnet);
+        console.log("provider Sepolia:", blockNumberSepolia);
+        console.log("provider matic:", blockNumberMatic);
+
+        // Local network - if have
+        const providerLocal = new JsonRpcProvider('http://localhost:8545');
+
+        // Remote URL - Infura
+        const providerInfura = new JsonRpcProvider('https://mainnet.infura.io/v3/your-infura-project-id');
+        const blockNumberMainnetInfura = await providerInfura.getBlockNumber();
+        console.log("Provider Mainnet (Infura):", blockNumberMainnetInfura);
+
+        // Remote URL - Alchemy
+        const providerAlchemy = new JsonRpcProvider('https://eth-mainnet.alchemyapi.io/v2/your-alchemy-API-Key');
+        const blockNumberMainnetAlchemy = await providerAlchemy.getBlockNumber();
+        console.log("Provider Mainnet (Alchemy):", blockNumberMainnetAlchemy);
+
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+main();</pre></code>
+        <h2>Получение информации из блокчейна</h2>
+        <p>Здесь мы рассмотрим некоторые полезные методы класса Provider, которые могут использоваться довольно часто, в
+          зависимости от потребностей каждого проекта.</p>
+        <h3>getBalance()</h3>
+        <p>Возвращает баланс счета в wei.</p>
+        <h3>getNetwork()</h3>
+        <p>Извлекает информацию о сети, например имя сети, идентификатор цепочки и т.д.</p>
+        <h3>getBlockNumber()</h3>
+        <p>Извлекает текущий номер блока.</p>
+        <h3>getTransactionCount()</h3>
+        <p>Возвращает количество транзакций по определенному адресу, включая как входящие, так и исходящие транзакции.
+        </p>
+        <h3>getFeeData()</h3>
+        <p>Получает данные о тарифах, такие как текущая цена за газ и предполагаемый лимит газа.</p>
+        <h3>getBlock()</h3>
+        <p>Извлекает сведения о конкретном блоке, включая текущее состояние, временную метку, транзакции и т.д.</p>
+        <h3>getCode()</h3>
+        <p>Извлекает байт-код развернутого смарт-контракта.</p>
+        <h3>Код</h3>
+        <code><pre>import {ethers} from "ethers";
+
+const {getDefaultProvider} = ethers;
+
+async function main() {
+    try {
+        const provider = getDefaultProvider("sepolia");
+
+        const balance = await provider.getBalance("0xBf49Bd2B2c2f69c53A40306917112945e27577A4");
+        console.log("Balance:", balance.toString());
+
+        const network = await provider.getNetwork();
+        console.log("Network fetched:", JSON.stringify(network, null, 2));
+
+        const blockNumber = await provider.getBlockNumber();
+        console.log("Block Number:", blockNumber);
+
+        // example address you can replace
+        const transactionCount = await provider.getTransactionCount("0xBf49Bd2B2c2f69c53A40306917112945e27577A4");
+        console.log("Transaction Count:", transactionCount);
+
+        const feeData = await provider.getFeeData();
+        console.log("FeeData:", feeData);
+
+        const block = await provider.getBlock(blockNumber);
+        console.log("Block:", block);
+
+        // SimpleCryptoKitties contract deployed on sepolia and we will interact with
+        const code = await provider.getCode("0xdaCc865922356723C01305F819E65ffB1b14520D");
+        console.log("Code:", code);
+
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+main();</pre></code>
+      </article>
+    </section>
+    <section class="main-section" id="contract-info">
+      <article>
+        <header>Получение информации о контракте</header>
+        <h2>Класс Contract</h2>
+        <p>Сила блокчейна Ethereum заключается в его контрактах. В ethers.js класс Contracts представляет собой
+          абстракцию контрактов, развёрнутых в сети Ethereum. Он позволяет получать результаты и события транзакций, а
+          также совершать транзакции с помощью смарт-контрактов. Объекты контракта могут быть доступны только для чтения
+          или изменять свое состояние.</p>
+        <h3>Контракт только для чтения</h3>
+        <p>В качестве параметров он принимает адрес контракта, abi контракта и поставщика.</p>
+        <code>const contract = new ethers.Contract(&lt;address&gt;, &lt;abi&gt;, &lt;provider&gt;);</code>
+        <h3>Контракт, изменяющий состояние</h3>
+        <p>В качестве параметров он принимает адрес контракта, abi контракта и подписавшего.</p>
+        <code>const contract = new ethers.Contract(&lt;address&gt;, &lt;abi&gt;, &lt;signer&gt;);</code>
+        <p>Рассмотрим получение информации из смарт-контракта SimpleCryptoKitties.</p>
+        <h2>Получение ABI</h2>
+        <p>Прежде чем писать вызов метода Contract, давайте сначала рассмотрим двоичный интерфейс приложения (ABI). ABI
+          определяет, как программные компоненты взаимодействуют и обмениваются данными на двоичном уровне. Он
+          определяет структуры данных, сигнатуры функций и соглашения по кодированию и декодированию
+          информации.</p>
+        <p>Поскольку все операции в блокчейне должны быть закодированы, как двоичные данные, нам нужен краткий способ
+          определения преобразования между обычными объектами (такими как строки и числа) и их двоичным
+          представлением.</p>
+        <p>Чтобы получить ABI смарт-контракта, есть несколько методов, и здесь мы рассмотрим 3 из них:</p>
+        <ol>
+          <li>Blockchain Explorer: например, Contract ABI можно найти в Etherscan, выполните поиск по адресу контракта,
+            затем перейдите на вкладку «Contract» и найдите «Contact ABI».</li>
+          <img src="images/2c63f4b1-996b-4e72-b30a-68dee98ab366.webp" />
+          <li>Стандартные библиотеки: Многие смарт-контракты используют стандартные сторонние библиотеки или фреймворки,
+            такие как OpenZeppelin, которые предоставляют готовые контракты с соответствующими ABI. Подробнее об этом
+            можно узнать в документации.</li>
+          <li>Инструменты разработки: такие инструменты, как Truffle, Hardhat или Remix, часто предоставляют утилиты для
+            извлечения ABI из развернутых контрактов.</li>
+        </ol>
+        <p>ABI — критически важный компонент взаимодействия со смарт-контрактами. Включение ABI в код вашего приложения
+          — это не только передовая практика, но и гарантия его надежности.</p>
+        <h2>Объект ABI</h2>
+        <p>Теперь перейдём к кодам. Ранее мы кратко рассказали о том, как выглядят коды, включающие ABI контракта.
+          Существует несколько способов включить ABI.</p>
+        <p>Поскольку мы будем взаимодействовать с контрактом SimpleCryptoKitties, следующий пример будет основан на нём.
+          Мы запросим количество отчеканенных NFT-токенов CryptoKitties.</p>
+        <p>Примечание: Не все функции и события смарт-контракта будут вызваны приложением. Поэтому те, которые не
+          задействованы, можно исключить.</p>
+        <h3>Прямой ввод ABI смарт-контракта</h3>
+        <p>На основе контракта, ранее развернутого в Sepolia Testnet, мы создаем следующие экземпляры:</p>
+        <code><pre>const contractAddress = '0x983236bE64Ef0f4F6440Fa6146c715CC721045fA';
+const contractABI = [
+    {
+        "inputs": [],
+        "name": "ownerOf",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+];</pre></code>
+        <h3>Ввод сигнатуры функции</h3>
+        <p>Более простой и понятный для человека способ — вставить сигнатуры функций.</p>
+        <code><pre>const contractAddress = '0x983236bE64Ef0f4F6440Fa6146c715CC721045fA';
+const contractABI = 'function ownerOf(unit256 tokenId) returns (address)';</pre></code>
+        <p>По мере продвижения по этому курсу мы изучим роли ABI.</p>
+        <h3>Код</h3>
+        <code><pre>import { ethers } from "ethers";
+
+// 1.
+const contractABI = [
+    // ...
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "name",
+        "outputs": [
+            {
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    }
+    // ...
+];
+
+// 2.
+const contractABI = ["function name() view returns (string)"];
+
+const contractAddress = "0x983236bE64Ef0f4F6440Fa6146c715CC721045fA";
+
+async function main() {
+    try {
+        const provider = ethers.getDefaultProvider("sepolia");
+        const readOnlyContract = new ethers.Contract(contractAddress, contractABI, provider);
+        const name = await readOnlyContract.name();
+        console.log("Token Name:", name);
+    } catch (error) {
+        console.error("Error in contract interaction:", error);
+    }
+}
+
+main();</pre></code>
+      </article>
+    </section>
+    <section class="main-section" id="connect-wallet">
+      <article>
+        <header>Подключение к кошельку</header>
+        <h2>Классы Signer и Wallet</h2>
+        <p>Другой важный класс в ethers.js — Signer и его производный класс Wallet. Их функции — подписывать сообщения
+          и транзакции, а также отправлять подписанные транзакции в сеть.</p>
+        <p>Когда транзакция успешно включена в блокчейн, она изменяет состояние блокчейна.</p>
+        <h3>Signer</h3>
+        <p>Для совершения транзакции необходимо владеть внешним аккаунтом (далее мы будем называть его аккаунтом).
+          Закрытый ключ аккаунта обычно зашифрован и хранится в безопасном месте. Класс Signers оборачивает
+          все операции, связанные с аккаунтом. Он извлекает закрытый ключ и подписывает транзакцию.</p>
+        <p>Класс Singer может представлять не только внешний аккаунт, но и другие типы подписантов, например,
+          контрактные кошельки или внешние поставщики кошельков, например, MetaMask. Поскольку это абстрактный класс,
+          его экземпляр нельзя создать напрямую. Это делается через Wallet.</p>
+        <h3>Wallet</h3>
+        <p>Wallet — это конкретная реализация класса Signer. Он упрощает взаимодействие с блокчейном Ethereum. Он
+          предоставляет прямой доступ к управлению закрытыми ключами и подходит для использования в приложении.</p>
+        <h2>Соединение с кошельком</h2>
+        <p>Давайте подключимся к кошельку. Есть несколько распространённых способов сделать это. Рассмотрим их по
+          порядку.</p>
+        <h3>Новый кошелек со случайным приватным ключом</h3>
+        <p>Если у пользователя нет учетной записи или он решает создать новую учетную запись, ethers.js создаст новую
+          учетную запись из зашифрованного безопасного источника энтропии, используя следующую строку кода.</p>
+        <code>const wallet = ethers.Wallet.createRandom();</code>
+        <h3>Импорт существующей учетной записи с закрытым ключом</h3>
+        <p>Если у пользователя есть существующая учетная запись и он предпочитает ее использовать, ее можно
+          импортировать с помощью следующих строк кода.</p>
+        <code><pre>const privateKey = process.env.PRIVATE_KEY;
+const wallet = new ethers.Wallet(privateKey, provider);</pre></code>
+        <h3>Импорт существующей учетной записи с мнемоническим кодом</h3>
+        <p>Или, если пользователь знает мнемоническую фразу, учетную запись можно импортировать следующим образом:</p>
+        <code>const wallet = ethers.Wallet.fromPhrase(mnemonic.phrase);</code>
+        <h3>Импорт существующей учетной записи из файла JSON</h3>
+        <p>Если у пользователя есть зашифрованный JSON-файл кошелька из приложения-кошелька, информацию об учетной
+          записи можно расшифровать с помощью следующего метода.</p>
+        <code>const wallet = await ethers.Wallet.fromEncryptedJson(json, password);</code>
+        <h3>Код</h3>
+        <code><pre>import { ethers } from "ethers";
+
+// Note: Keep the private key secure. This is for demonstration purposes only.
+// Create a new wallet with a random private key
+function createRandomWallet() {
+    const wallet = ethers.Wallet.createRandom();
+    console.log("New Wallet Address:", wallet.address);
+    console.log("New Wallet Private Key:", wallet.privateKey);
+    return wallet;
+}
+
+// Import an existing account with a private key
+async function importWalletWithPrivateKey(privateKey, provider) {
+    const wallet = new ethers.Wallet(privateKey, provider);
+    console.log("Imported Wallet Address:", wallet.address);
+    return wallet;
+}
+
+// Import an existing account with a mnemonic
+function importWalletWithMnemonic(mnemonic) {
+    const wallet = ethers.Wallet.fromPhrase(mnemonic);
+    console.log("Imported Wallet Address:", wallet.address);
+    return wallet;
+}
+
+
+// Replace with yours own
+const privateKey = '';
+const mnemonic = '';
+const url = '';
+async function main() {
+    try {
+        const provider = new ethers.JsonRpcProvider(url);
+
+        // Create a random wallet
+        const randomWallet = createRandomWallet();
+
+        // Import an existing account (using a private key)
+        const importedWalletWithPrivateKey = await importWalletWithPrivateKey(privateKey, provider);
+
+        // Import an existing account (using a mnemonic)
+        const importedWalletWithMnemonic = importWalletWithMnemonic(mnemonic);
+
+        // Example: Sign a message using the random wallet
+        const message = "Hello, Ethereum!";
+        const signedMessage = await randomWallet.signMessage(message);
+        console.log("Signed Message:", signedMessage);
+
+        // Example: Send a transaction using the imported wallet with a private key
+        const recipient = randomWallet.address; // Use the random wallet address as the recipient
+        const feeData = await provider.getFeeData();
+        console.log(`Current gas price: ${ethers.formatUnits(feeData.gasPrice, 'gwei')} gwei`);
+        const gasLimit = 21000; // Set gas limit
+
+        const tx = await importedWalletWithPrivateKey.sendTransaction({
+            to: recipient,
+            value: ethers.parseEther('0.01'), // Send 0.01 ETH
+            gasLimit: gasLimit, // Set gas limit
+            gasPrice: feeData.gasPrice // Get the current gas price
+        });
+        console.log('Transaction hash:', tx.hash);
+
+        // Wait for the transaction to be confirmed
+        const receipt = await tx.wait();
+        console.log('Transaction confirmed:', receipt);
+
+        // Get the new balance
+        const newBalance = await provider.getBalance(randomWallet.address);
+        console.log(`New Balance: ${ethers.formatEther(newBalance)} ETH`);
+
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+main();</pre></code>
+      </article>
+    </section>
+    <section class="main-section" id="interactions">
+      <article>
+        <header>Взаимодействия с контрактом</header>
+        <p>Ранее мы научились подключаться к сети и кошельку. Теперь начнём взаимодействовать с контрактом, поэтапно
+          создавая строки кода.</p>
+        <p>Следуя сценарию, мы напишем код для извлечения всех отчеканенных котят и их владельцев.</p>
+        <h3>Загрузка существующего контракта</h3>
+        <p>Во-первых, нам нужно знать, с каким контрактом мы взаимодействуем. В данном случае мы будем взаимодействовать
+          с контрактом SimpleCryptoKitties, развёрнутым в тестовой сети Sepolia. Этого можно добиться, создав экземпляр
+          объекта Contract.</p>
+        <code>const contract = new ethers.Contract(contractAddress, contractABI, wallet);</code>
+        <h3>Вызов функций контракта</h3>
+        <p>Затем мы вызываем функции контракта, чтобы получить необходимые данные. Это стандартный контракт ERC721,
+          унаследовавший функции ERC721. Нам нужно вызвать две функции: totalSupply() и ownOf().</p>
+        <code><pre>const totalSupply = await contract.totalSupply();
+const owner = await contract.ownerOf("Token ID");</pre></code>
+        <p>Поскольку мы хотим получить список всех владельцев отчеканенных котят, это требует итерации. В данном случае
+          мы достигаем этого, объявляя функцию getAllKitties().</p>
+        <code><pre>// Iterate to get all Kitties minted and their owners
+async function getAllKitties() {
+    const totalSupply = await contract.totalSupply();
+    const nfts = [];
+
+    for (let i = 1; i <= totalSupply; i++) {
+        const owner = await contract.ownerOf(i);
+        nfts.push({ tokenId: i, owner: owner });
+    }
+    return nfts;
+}
+
+// List all Kitties and their owners
+getAllKitties().then((nfts) => {
+    console.log("List of all Kitties minted and their owners: ");
+    nfts.forEach((nft) => {
+        console.log(`Token ID: ${nft.tokenId}, Owner: ${nft.owner}`);
+    });
+});</pre></code>
+        <h3>Код</h3>
+        <code><pre>import { ethers } from "ethers";
+
+// Only part of the ABI needed for this example
+const abi = [
+    {
+        "inputs": [],
+        "name": "createKittyGen0",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "kitties",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "genes",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "birthTime",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "momId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "dadId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "generation",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+];
+
+// SimpleCryptoKitties deployed on sepolia
+const address = '0x983236bE64Ef0f4F6440Fa6146c715CC721045fA';
+// Ensure this account has enough balance to initiate transactions
+const privateKey = 'your private key';
+
+const {JsonRpcProvider, formatUnits} = ethers;
+async function main() {
+    try {
+        const provider = new JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/your_alchemy_api_key');
+        const signer = new ethers.Wallet(privateKey, provider);
+        const contract = new ethers.Contract(address, abi, signer);
+
+        // Retrieve information of the kitty with ID 1
+        const Kitty = await contract.kitties(1);
+        // Genes: 8939624848462445358854850372772757587656232460263979629700006907634671281697
+        console.log("Kitty 1 Genes:", Kitty.genes.toString());
+        // BirthTime: 1715619696
+        console.log("Kitty 1 BirthTime:", Kitty.birthTime.toString());
+        console.log("Kitty 1 MomId:", Kitty.momId.toString());
+        console.log("Kitty 1 DadId:", Kitty.dadId.toString());
+        console.log("Kitty 1 Generation:", Kitty.generation.toString());
+
+        // Get current gas price and set gas limit
+        const feeData = await provider.getFeeData();
+        console.log(`Current gas price: ${formatUnits(feeData.gasPrice, 'gwei')} gwei`);
+        const gasLimit = 300000;
+
+        // Create a new Generation 0 kitty
+        console.log("Attempting to create a new Generation 0 kitty...");
+        const createTxResponse = await contract.createKittyGen0({ gasLimit, gasPrice: feeData.gasPrice });
+        console.log("Transaction sent, waiting for receipt...");
+        const receipt = await createTxResponse.wait();
+        // console.log("Transaction receipt:", receipt);
+
+        // Get newKitty's tokenId
+        const newKittyId = ethers.toBigInt(receipt.logs[0].topics[3]);
+
+        // Fetch the new kitty's details
+        const newKitty = await contract.kitties(newKittyId.toString());
+        console.log("New Kitty TokenId:", newKittyId.toString());
+        console.log("New Kitty Genes:", newKitty.genes.toString());
+        console.log("New Kitty BirthTime:", newKitty.birthTime.toString());
+        console.log("New Kitty MomId:", newKitty.momId.toString());
+        console.log("New Kitty DadId:", newKitty.dadId.toString());
+        console.log("New Kitty Generation:", newKitty.generation.toString());
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+main();</pre></code>
+      </article>
+    </section>
+    <section class="main-section" id="utilities">
+      <article>
+        <header>Утилиты</header>
+        <h2>Форматирование</h2>
+        <p>В предыдущем разделе мы выполнили вызов Contracts только для чтения. Прежде чем перейти к вызову Contract,
+          изменяющему состояние, давайте рассмотрим некоторые методы, обычно используемые при подготовке транзакции.</p>
+        <p>При подготовке компонентов транзакции мы обычно предоставляем их в удобном для восприятия формате. Некоторые
+          компоненты необходимо отформатировать для совместимости с блокчейном Ethereum перед подписанием, например, для
+          обмена ETH на Wei.</p>
+        <h3>ethers.parseEther</h3>
+        <p>Конвертирует ETH в Wei, наименьшую единицу ETH, которая является наименьшей единицей, используемой в
+          блокчейне. parseEther('1') конвертирует 1 ETH в 1&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;000
+          Wei.</p>
+        <h3>ethers.formatEther</h3>
+        <p>Конвертирует Wei в ETH для более удобного для восприятия формата. formatEther('1000000000000000000')
+          конвертирует 1&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;000&nbsp;000 Wei в 1 Ether.</p>
+        <h3>ethers.parseUnits</h3>
+        <p>Конвертирует большие единицы в меньшие. Например, из 1 ETH в 1&nbsp;000&nbsp;000&nbsp;000 Gwei.
+          parseUnits('1', 9) конвертирует 1 ETH в Gwei с 9 десятичными знаками. Функция преобразует любую единицу
+          токена в наименьшую единицу с заданной точностью после запятой, указанной во втором параметре.</p>
+        <h3>ethers.formatUnits</h3>
+        <p>Конвертирует меньшие единицы в большие. Например, из Gwei в ETH.formatUnits('1000000000', 9) конвертирует
+          1&nbsp;000&nbsp;000&nbsp;000 Gwei в 1 ETH. Функция конвертирует любую единицу токена, начиная с наименьшей, с
+          заданной десятичной точностью, указанной во втором параметре.</p>
+        <h3>Код</h3>
+        <code><pre>import { ethers } from 'ethers';
+
+const { formatUnits,parseUnits } = ethers;
+
+const provider = ethers.getDefaultProvider("sepolia");
+
+const accountAddress = "0xBf49Bd2B2c2f69c53A40306917112945e27577A4";
+
+async function main() {
+    try {
+        // Convert small units to large units
+        // For example, the balance returned is in wei, which is not easy to read, so it should be converted to ether units
+        const balance = await provider.getBalance(accountAddress);
+        console.log(`Balance in Ether: ${formatUnits(balance, "ether")}`);
+
+        // Convert large units to small units
+        // For example, if a user inputs 0.05 ether, it should be converted to the machine-readable Wei units for processing
+        const transactionAmount = parseUnits("0.05", "ether");
+        console.log(`0.05 Ether in Wei: ${transactionAmount.toString()}`);
+
+    } catch (error) {
+        console.error('Error fetching:', error);
+    }
+}
+
+main();</pre></code>
+        <h2>Кодирование и декодирование</h2>
+        <p>Все данные, отправляемые в блокчейн Ethereum, должны быть закодированы соответствующим образом.</p>
+        <ol>
+          <li>Сжатие данных и эффективность: чем больше сеть блокчейна, тем она безопаснее. Поэтому важно сделать данные
+            лёгкими для эффективной передачи по большой сети. Это также помогает сократить объём хранилища.</li>
+          <li>Целостность и безопасность данных: кодирование данных в соответствии с определенными стандартами
+            обеспечивает правильное форматирование данных и их однозначную интерпретацию, что позволяет сократить
+            количество ошибок, уязвимостей и несоответствий.</li>
+        </ol>
+        <p>Вот несколько распространённых методов. Вы можете найти их здесь, в документации.</p>
+        <h3>hexlify()</h3>
+        <p>Преобразует значение в его шестнадцатеричное представление.</p>
+        <code><pre>const hexValue = ethers.hexlify(42);
+console.log(hexValue); // Output: '0x2a'</pre></code>
+        <h3>encodeRlp()</h3>
+        <p>Кодирует данные с помощью алгоритма рекурсивного префикса длины (RLP), обычно используется для кодирования
+          данных и параметров транзакций.</p>
+        <code><pre>const encodedData = ethers.encodeRlp(['Hello', 'world']);
+console.log(encodedData); // Output: '0xc88348656c6c6f87776f726c64'</pre></code>
+        <h3>toUtf8Bytes()</h3>
+        <p>Чтобы преобразовать строку в кодировке UTF-8 в соответствующие байты, поскольку смарт-контракты Ethereum
+          хранят и обрабатывают данные в байтах, строки необходимо преобразовать в байты.</p>
+        <code>const uft8Bytes = ethers.toUtf8Bytes('STRING');</code>
+        <h3>Код</h3>
+        <code><pre>import { ethers } from 'ethers';
+
+const { toUtf8Bytes, encodeRlp, toBeHex } = ethers;
+// transactionData
+const transactionData = {
+    assetId: 1,
+    owner: '0xBf49Bd2B2c2f69c53A40306917112945e27577A4',
+    description: "fantastic token"
+};
+
+// Encode as a hexadecimal string
+const assetIdHex = toBeHex(BigInt(transactionData.assetId));
+const owner = toBeHex(BigInt(transactionData.owner));
+// Convert to UTF-8 bytes
+const descriptionBytes = toUtf8Bytes(transactionData.description);
+
+// RLP encode the complete transaction data
+const rlpEncodedTransaction = encodeRlp([assetIdHex, owner, descriptionBytes]);
+
+console.log(`RLP encoded transaction data: ${rlpEncodedTransaction}`);</pre></code>
+        <h2>Криптографические операции</h2>
+        <p>Криптография — важная часть блокчейна. Вот почему:</p>
+        <ol>
+          <li>Безопасность: Криптография обеспечивает целостность и подлинность транзакций и данных в блокчейне. Она
+            предотвращает несанкционированный доступ и защищает конфиденциальную информацию.</li>
+          <li>Аутентификация: Криптографические операции позволяют пользователям безопасно подтверждать свою личность и
+            авторизовать транзакции без централизованных органов или посредников.</li>
+          <li>Конфиденциальность данных: Шифрование — это криптографический метод, который защищает конфиденциальность
+            конфиденциальных данных, передаваемых и хранящихся в блокчейне.</li>
+          <li>Неизменяемое ведение записей: хэширование — это криптографический метод, который гарантирует, что данные,
+            передаваемые по блокчейну, остаются защищенными от взлома.</li>
+        </ol>
+        <h3>keccak256()</h3>
+        <p>Генерирует 256-битное хеш-значение из входных данных на основе алгоритма Keccak-256.</p>
+        <code>const hash = ethers.keccak256("Hello, world!");</code>
+        <h3>sha256()</h3>
+        <p>Подобно keccak256(), генерирует 256-битное хеш-значение из входных данных на основе алгоритма SHA-256.</p>
+        <code>const hash = ethers.sha256("Hello, world!");</code>
+        <p>Хотя мы можем выбрать любой из вышеперечисленных криптографических алгоритмов, вот несколько соображений,
+          которые помогут нам принять решение:</p>
+        <ol>
+          <li>Безопасность: Оба алгоритма широко изучены и проверены временем. Keccak256 — избранная хеш-функция в
+            Ethereum, поэтому, если вы работаете в экосистеме Ethereum, она может быть предпочтительным выбором.</li>
+          <li>Совместимость: если разработка подразумевает использование других экосистем или протоколов, использующих
+            SHA-256, то sha256() может быть лучшим выбором.</li>
+        </ol>
+        <h3>Код</h3>
+        <code><pre>import { ethers } from 'ethers';
+
+const documentData = "secret document"
+
+// SHA-256
+const sha256Hash = ethers.utils.sha256(ethers.utils.toUtf8Bytes(documentData));
+
+// Keccak-256
+const keccak256Hash = ethers.utils.keccak256(sha256Hash);
+
+// It should be 0xd73931a00e470929e3db691d445afd39a55581037792ac1a10cdb6cc5cdef649
+console.log(`final hash: ${keccak256Hash}`);</pre></code>
+      </article>
+    </section>
+    <section class="main-section" id="transactions">
+      <article>
+        <header>Транзакции</header>
+        <h2>Отправка транзакции</h2>
+        <p>Только подписанные транзакции могут быть транслированы в мемпул, и состояние блокчейна будет меняться с
+          каждой принятой транзакцией. Прежде чем отправлять транзакцию, давайте создадим её и подпишем.</p>
+        <p>Сценарий: Ранее мы запросили информацию о созданных SimpleCryptoKitty и их владельцах. Теперь мы отправим
+          немного ETH на счёт владельца, чтобы предложить купить понравившегося нам котёнка. Ранее мы запросили
+          информацию о котятах и их владельцах. Следующая транзакция не взаимодействует с контрактом, а представляет
+          собой просто перевод ETH с одного EOA на другой. Мы лишь ссылаемся на данные, полученные в результате нашего
+          запроса.</p>
+        <h3>Конструирование транзакции</h3>
+        <p>Для создания транзакции требуется несколько параметров: адрес получателя, сумма/предмет для перевода, лимит
+          газа и цена за газ.</p>
+        <code><pre>const amountToTransfer = ethers.parseEther('0.1'); //This will convert ETH into Wei
+
+const tx = {
+    to: 'RECIPIENT ADDRESS',
+    value: amountToTransfer,
+    gasLimit: 21000,
+    gasPrice: ethers.parseUnits('10', 'gwei'), // This indicates that the gas price is measured in Gwei.
+}</pre></code>
+        <p>Когда вся информация будет готова, мы сможем подписать транзакцию. Напоминаем: Wallet управляет закрытым
+          ключом и, следовательно, участвует в подписании транзакции. Этот процесс генерирует цифровую подпись,
+          подтверждающую подлинность и авторизацию транзакции.</p>
+        <code>const signedTx = await wallet.signTransaction(tx);</code>
+        <h3>Трансляция транзакции</h3>
+        <p>Вспомним, что провайдер подключается к узлу в сети. Мы также можем получить хэш транзакции, переданный для
+          справки, в частности, чтобы проверить, была ли транзакция добыта, и извлечь её данные из блокчейна после её
+          добычи.</p>
+        <code><pre>const sentTx = await provider.sendTransaction(signedTx);
+console.log('Transaction Hash: ', sentTx.hash); // Display the hash.</pre></code>
+        <h3>Ожидание подтверждения</h3>
+        <p>Новый блок формируется в среднем за 12 секунд, т.е. не мгновенно. Поэтому нам нужно дождаться завершения
+          транзакции.</p>
+        <code><pre>await sentTx.wait();
+
+console.log('Congratulation! Transaction confirmed.');</pre></code>
+        <p>Транслируемые транзакции могут не быть включены в блок по разным причинам. Наиболее распространённые из них:
+        </p>
+        <ol>
+          <li>Слишком много транзакций в мемпуле, а также транзакции с более низкой комиссией за газ будут оттеснены
+            транзакциями с более высокой комиссией. Они могут быть включены в блок позже.</li>
+          <li>gasLimit слишком мал.</li>
+          <li>Если отправитель пытается потратить монеты, которых у него нет, или цифровая подпись неверна, транзакция
+            будет отклонена.</li>
+          <li>Некоторые майнеры или узлы могут подвергать цензуре определенные транзакции.</li>
+        </ol>
+        <p>Следовательно, нам необходимо дождаться ответного сообщения о подтверждении транзакции.</p>
+        <h3>Код</h3>
+        <code><pre>import { ethers } from "ethers";
+
+const { JsonRpcProvider, parseEther, parseUnits } = ethers;
+
+const provider = new JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/YOUR_ALCHEMY_API_KEY');
+
+// Your wallet's private key (replace with your actual private key)
+const privateKey = 'your private key';
+const wallet = new ethers.Wallet(privateKey, provider);
+
+const recipientAddress = 'the address you want to send';
+const amountToSend = '0.001'; // In ETH
+
+async function main() {
+    const tx = {
+        to: recipientAddress,
+        // Convert ETH to Wei
+        value: parseEther(amountToSend),
+        gasLimit: 21000,
+        gasPrice: parseUnits('10', 'gwei'),
+    };
+
+    try {
+        console.log('Sending transaction...');
+        const txResponse = await wallet.sendTransaction(tx);
+        console.log(`Transaction hash: ${txResponse.hash}`);
+
+        // Wait for the transaction to be mined
+        const receipt = await txResponse.wait();
+        console.log('Transaction confirmed in block:', receipt.blockNumber);
+    } catch (error) {
+        console.error('Transaction failed:', error);
+    }
+}
+
+main();</pre></code>
+      </article>
+    </section>
+    <hr>
+    <p>Вы можете задаться вопросом: что, если владелец котёнка не отправит NFT? Ваши опасения обоснованы. Существуют
+      улучшенные методы решения этой проблемы, но это уже совсем другая история. Следите за новостями.</p>
+  </main>
+</body>
